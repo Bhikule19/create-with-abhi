@@ -12,5 +12,5 @@ export const navLabels: NavLabel[] = [
   { id: "brand", primary: "CREATE WITH ABHI", alt: "BHIKULE.DEV", href: "/" },
   { id: "theme", primary: "DARK MODE", alt: "LIGHT MODE", action: "toggle-theme" },
   { id: "menu", primary: "MENU", alt: "OPEN", action: "toggle-menu" },
-  { id: "talk", primary: "LET'S TALK", alt: "HELLO@BSF.IO", href: MAIL_HREF },
+  { id: "talk", primary: "LET'S TALK", alt: "SAY HELLO", href: MAIL_HREF },
 ];
