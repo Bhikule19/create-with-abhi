@@ -24,12 +24,6 @@ export function About() {
               <span className="text-accent">craft shows</span> — type, motion,
               and the seams between systems that should feel like one thing.
             </p>
-            <p className="mt-6 font-sans text-base leading-[1.7] text-ink-dim lg:text-lg">
-              The career timeline above covers the work; the projects below
-              cover the experiments. Outside of both, I read translated
-              Japanese fiction, follow motion design on Read.cv, and build the
-              occasional small tool that solves my own problem.
-            </p>
           </FadeUp>
 
           <FadeUp delay={0.1} className="lg:col-span-5">

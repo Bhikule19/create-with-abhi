@@ -20,7 +20,7 @@ export default function Home() {
             Built with the <span className="text-accent">stack</span>.
           </>
         }
-        countLabel="04 PROJECTS · PRODUCTION"
+        countLabel="03 PROJECTS · PRODUCTION"
         id="work-stack"
       />
       <SelectedWork
@@ -31,7 +31,7 @@ export default function Home() {
             Vibe-<span className="text-accent">coded</span>.
           </>
         }
-        countLabel="01 PROJECT · AI-COLLAB"
+        countLabel="03 PROJECTS · AI-COLLAB"
         id="work-vibe"
       />
       <About />

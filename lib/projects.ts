@@ -17,49 +17,35 @@ export type Project = {
 export const projects: Project[] = [
   // ─── Built with Stack ─────────────────────────────────────────────
   {
-    id: "docease",
-    index: "01",
-    title: "DocEase",
-    blurb:
-      "AI-powered platform for document simplification and accessibility — 10 languages, voice synthesis, custom QA chatbot, and 7+ chart types for sentiment, word-frequency, and structure analysis.",
-    stack: ["React.js", "TypeScript", "Gemini AI", "Recharts", "PDF.js", "Tailwind"],
-    year: "2024",
-    url: null,
-    github: null,
-    image: "/images/projects/docease.svg",
-    track: "stack",
-    highlight: "60% perf boost · Redux Toolkit",
-  },
-  {
     id: "designmd",
-    index: "02",
+    index: "01",
     title: "DESIGN.md Extractor",
     blurb:
       "Paste a URL, get a deterministic DESIGN.md — colour tokens, typography roles, spacing, components, with citations to the actual CSS rules.",
     stack: ["Next.js", "TypeScript", "OKLCH", "AST"],
     year: "2026",
-    url: null,
+    url: "https://designmd-extractor-rouge.vercel.app/",
     image: "/images/projects/designmd.svg",
     track: "stack",
     highlight: "Deterministic tokens",
   },
   {
     id: "medical-report-companion",
-    index: "03",
+    index: "02",
     title: "Medical Report Companion",
     blurb:
-      "Plain-language medical-report summaries in 6 Indian languages. DPDP-aware. Groq Llama 3.3 70B for low-latency inference.",
+      "Medical-report summaries in multiple languages. DPDP-aware. Groq Llama 3.3 70B for low-latency inference.",
     stack: ["Next.js", "Supabase", "Groq", "Llama 3.3"],
     year: "2026",
-    url: "https://github.com/Bhikule19/medical-report-companion",
+    url: "https://medical-report-companion.vercel.app/",
     github: "https://github.com/Bhikule19/medical-report-companion",
     image: "/images/projects/medical-report.svg",
     track: "stack",
-    highlight: "6 Indian languages",
+    highlight: "Multiple languages",
   },
   {
     id: "wp-agent-ai",
-    index: "04",
+    index: "03",
     title: "WP Agent AI",
     blurb:
       "Gutenberg AI block + admin dashboard. Multi-provider (OpenRouter / Anthropic / Groq), async jobs, Force UI for the settings.",
@@ -73,6 +59,32 @@ export const projects: Project[] = [
 
   // ─── Vibe Coded ───────────────────────────────────────────────────
   {
+    id: "serp-optimizer",
+    index: "02",
+    title: "SERP Optimizer",
+    blurb:
+      "On-page SEO smith — paste a URL, get a ranked checklist of meta, headings, schema, and content fixes with before/after previews.",
+    stack: ["React", "Vite", "Tailwind", "Lovable"],
+    year: "2026",
+    url: "https://serpsmith-studio.lovable.app",
+    image: "/images/projects/serp-optimizer.svg",
+    track: "vibe",
+    highlight: "Ranked SEO fixes",
+  },
+  {
+    id: "thread-x-buddy",
+    index: "03",
+    title: "Thread/X Buddy",
+    blurb:
+      "Paste a long-form draft, get a tweet-sized thread — auto-numbered, character-aware, with hook and CTA suggestions for X/Twitter.",
+    stack: ["React", "Vite", "Tailwind", "Lovable"],
+    year: "2026",
+    url: "https://thread-x-buddy-maker.lovable.app",
+    image: "/images/projects/thread-x-buddy.svg",
+    track: "vibe",
+    highlight: "Long-form → thread",
+  },
+    {
     id: "ai-pdf-translator",
     index: "01",
     title: "AI PDF Translator",
@@ -84,5 +96,5 @@ export const projects: Project[] = [
     image: "/images/projects/ai-pdf-translator.svg",
     track: "vibe",
     highlight: "Zero-cost pipeline",
-  },
+  }
 ];

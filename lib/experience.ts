@@ -69,18 +69,4 @@ export const experience: Experience[] = [
     ],
     stack: ["JavaScript", "PHP", "WordPress", "SCSS", "Bootstrap", "REST"],
   },
-  {
-    id: "ola-electric",
-    start: "NOV 2021",
-    end: "JUL 2022",
-    isCurrent: false,
-    role: "Diagnostic Service Engineer",
-    company: "OLA Electric",
-    location: "Surat, GJ",
-    bullets: [
-      "Diagnosed electric vehicles in the field — broke down breakdowns into actionable steps for the service team.",
-      "Implemented warranty and SOP processes with clear problem statements for field engineers.",
-    ],
-    stack: ["EV Systems", "SOP Design", "Field Diagnostics"],
-  },
 ];

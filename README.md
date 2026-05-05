@@ -1,6 +1,6 @@
 # create-with-abhi
 
-Personal portfolio of [Abhishek Bhikule](mailto:abhishekb@bsf.io). A single-page,
+Personal portfolio of [Abhishek Bhikule](mailto:createwithabhi19@gmail.com). A single-page,
 five-section site with rich motion chrome — preloader, custom cursor,
 hover-swap nav, fullscreen menu, image-trail hero, giant stacked footer
 wordmark.

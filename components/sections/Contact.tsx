@@ -1,5 +1,5 @@
 import { FadeUp } from "@/components/motion/FadeUp";
-import { MAIL_HREF } from "@/lib/socials";
+import { EMAIL, MAIL_HREF } from "@/lib/socials";
 
 export function Contact() {
   return (
@@ -56,7 +56,7 @@ export function Contact() {
             href={MAIL_HREF}
             className="text-ink underline-offset-4 transition-colors hover:text-accent hover:underline"
           >
-            abhishekb@bsf.io
+            {EMAIL}
           </a>
         </p>
       </FadeUp>

@@ -12,7 +12,7 @@ const TRACK_LABEL: Record<Project["track"], string> = {
 };
 
 const TOTAL_PER_TRACK = (track: Project["track"]) =>
-  track === "stack" ? "04" : "01";
+  track === "stack" ? "03" : "03";
 
 export function ProjectRow({ project }: { project: Project }) {
   const [hovered, setHovered] = useState(false);
