@@ -1,34 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# create-with-abhi
 
-## Getting Started
+Personal portfolio of [Abhishek Bhikule](mailto:abhishekb@bsf.io). A single-page,
+five-section site with rich motion chrome — preloader, custom cursor,
+hover-swap nav, fullscreen menu, image-trail hero, giant stacked footer
+wordmark.
 
-First, run the development server:
+## Stack
+
+- **Framework** — Next.js 16 (App Router) + React 19 + TypeScript
+- **Styling** — Tailwind CSS v4 (CSS variables for theme tokens)
+- **Smooth scroll** — Lenis
+- **Scroll motion** — GSAP + ScrollTrigger
+- **Component motion** — Motion (`motion/react`)
+- **Theme** — `next-themes` (light cream / warm dark, persisted)
+- **Text splitting** — `split-type` (preloader char reveal)
+- **Fonts** — Bricolage Grotesque (display, variable), Geist (body), JetBrains Mono (labels) — all via `next/font/google`
+
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev          # http://localhost:3000
+pnpm build        # production build
+pnpm start        # serve the production build
+pnpm lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project shape
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+app/
+  layout.tsx               providers, fonts, persistent chrome
+  page.tsx                 single-page composition
+  globals.css              Tailwind v4 @theme + CSS variables
+  opengraph-image.tsx      OG image generator (1200×630)
+components/
+  chrome/                  Preloader, TopBar, HoverSwap, MenuOverlay, ThemeToggle, Cursor, RotatingMark
+  sections/                Hero, SelectedWork, ProjectRow, About, Contact, Footer
+  motion/                  SmoothScroll, FadeUp, ThumbnailFollow, ImageTrail
+  ui/                      HoverLink
+lib/                       projects, currently, trail, nav, socials
+public/images/             projects/ + trail/ assets
+```
 
-## Learn More
+## Theming
 
-To learn more about Next.js, take a look at the following resources:
+Two themes via `next-themes` writing `data-theme="light|dark"` on `<html>`.
+Tokens live in `app/globals.css` as CSS variables and are mapped to Tailwind
+utilities through `@theme` (e.g. `bg-bg`, `text-ink`, `text-ochre`).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Token | Light | Dark |
+|---|---|---|
+| `--bg`     | `#fafafa` | `#0a0a0a` |
+| `--ink`    | `#0a0a0a` | `#fafafa` |
+| `--paper`  | `#f1f1f1` | `#161616` |
+| `--accent` | `#ff2e35` | `#ff453a` |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Motion
 
-## Deploy on Vercel
+- Preloader runs once per browser session (gated by `sessionStorage`)
+- Custom cursor disabled on `(hover: none)` and `prefers-reduced-motion: reduce`
+- Hero image trail and scroll-tied reveals also gated on reduced motion
+- Lenis smooth scroll synced with ScrollTrigger via `lenis.on("scroll", ScrollTrigger.update)`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Content
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Editable in `lib/`:
+
+- `projects.ts` — featured project list (title, blurb, stack, year, url, image)
+- `currently.ts` — "currently" status block in About
+- `trail.ts` — image pool for hero cursor trail
+- `nav.ts` — top-bar hover-swap labels
+- `socials.ts` — GitHub / LinkedIn / mailto
+
+Project thumbnails live in `public/images/projects/`. Trail thumbnails in
+`public/images/trail/` (currently re-uses project tiles via `lib/trail.ts`).
+
+## Deploy
+
+Built for Vercel. The OG image is generated at the edge from
+`app/opengraph-image.tsx`.
+
+## License
+
+Personal site. Code MIT-style for reference; brand wordmark and copy are
+mine. Don't ship a copy with my name on it.

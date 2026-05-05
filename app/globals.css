@@ -1,1 +1,116 @@
 @import "tailwindcss";
+
+/* next-themes uses data-theme on <html> */
+@variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* KINETIC — dark-mode-first. Volt #C6FF00 on carbon #000. */
+:root {
+  --bg: #000000;
+  --ink: #f6f6f6;
+  --ink-dim: #c3caac;
+  --surface: #131313;
+  --surface-high: #1f1f1f;
+  --paper: #1a1a1a;
+  --rule: rgba(255, 255, 255, 0.08);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --accent: #c6ff00;
+  --accent-glow: rgba(198, 255, 0, 0.45);
+}
+
+[data-theme="light"] {
+  --bg: #fafafa;
+  --ink: #0a0a0a;
+  --ink-dim: rgba(10, 10, 10, 0.6);
+  --surface: #f1f1f1;
+  --surface-high: #e4e4e4;
+  --paper: #ededed;
+  --rule: rgba(10, 10, 10, 0.12);
+  --border-glass: rgba(10, 10, 10, 0.1);
+  --accent: #536d00;
+  --accent-glow: rgba(83, 109, 0, 0.3);
+}
+
+@theme {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-surface: var(--surface);
+  --color-surface-high: var(--surface-high);
+  --color-paper: var(--paper);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-glass: var(--border-glass);
+
+  --font-display:
+    var(--ff-display), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans:
+    var(--ff-body), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--ff-display), ui-monospace, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family:
+      var(--ff-body),
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      sans-serif;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #000000;
+  }
+
+  /* Visible focus for keyboard users — paired with the global cursor: none */
+  :focus {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 0;
+  }
+
+  /* Lenis ergonomics */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
