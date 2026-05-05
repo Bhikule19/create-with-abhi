@@ -8,6 +8,8 @@ import { MenuOverlay } from "@/components/chrome/MenuOverlay";
 import { Cursor } from "@/components/chrome/Cursor";
 import { Preloader } from "@/components/chrome/Preloader";
 import { ScrollProgress } from "@/components/chrome/ScrollProgress";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -22,7 +24,7 @@ const manrope = Manrope({
   display: "swap",
 });
 
-const SITE_URL = "https://createwithabhi.com";
+const SITE_URL = "https://createwithabhi.in";
 const TITLE = "Abhishek Bhikule — Create with Abhi";
 const DESCRIPTION =
   "Full-stack developer based in Mumbai. I build for the web — products, plugins, and the occasional weekend experiment.";
@@ -102,6 +104,8 @@ export default function RootLayout({
             </SmoothScroll>
           </MenuProvider>
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
