@@ -62,7 +62,7 @@ export function TopBar() {
           href={MAIL_HREF}
           className="hidden border border-ink px-3 py-1.5 transition-colors hover:border-accent hover:text-accent sm:inline-block"
         >
-          <HoverSwap primary="LET'S TALK" alt="HELLO@BSF.IO" />
+          <HoverSwap primary="LET'S TALK" alt="" />
         </a>
       </nav>
     </header>
