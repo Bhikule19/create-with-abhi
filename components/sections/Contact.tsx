@@ -1,5 +1,10 @@
 import { FadeUp } from "@/components/motion/FadeUp";
-import { EMAIL, MAIL_HREF } from "@/lib/socials";
+import {
+  EMAIL,
+  MAIL_HREF,
+  RESUME_FILENAME,
+  RESUME_HREF,
+} from "@/lib/socials";
 
 export function Contact() {
   return (
@@ -38,17 +43,32 @@ export function Contact() {
           line and let&apos;s talk.
         </p>
 
-        <a
-          href={MAIL_HREF}
-          data-cursor="link"
-          className="group relative mt-2 inline-flex items-center gap-3 bg-accent px-8 py-4 font-display text-sm font-bold uppercase tracking-[0.2em] text-bg transition-transform duration-300 hover:scale-[1.04]"
-          style={{ boxShadow: "0 0 60px var(--accent-glow)" }}
-        >
-          <span>Say Hello</span>
-          <span className="transition-transform duration-300 group-hover:translate-x-1">
-            ↗
-          </span>
-        </a>
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-4">
+          <a
+            href={MAIL_HREF}
+            data-cursor="link"
+            className="group relative inline-flex items-center gap-3 bg-accent px-8 py-4 font-display text-sm font-bold uppercase tracking-[0.2em] text-bg transition-transform duration-300 hover:scale-[1.04]"
+            style={{ boxShadow: "0 0 60px var(--accent-glow)" }}
+          >
+            <span>Say Hello</span>
+            <span className="transition-transform duration-300 group-hover:translate-x-1">
+              ↗
+            </span>
+          </a>
+
+          <a
+            href={RESUME_HREF}
+            download={RESUME_FILENAME}
+            data-cursor="link"
+            aria-label="Download résumé (PDF)"
+            className="group relative inline-flex items-center gap-3 border border-ink/30 px-8 py-4 font-display text-sm font-bold uppercase tracking-[0.2em] text-ink transition-colors duration-300 hover:border-accent hover:text-accent"
+          >
+            <span>Download Resume</span>
+            <span className="transition-transform duration-300 group-hover:translate-y-0.5">
+              ↓
+            </span>
+          </a>
+        </div>
 
         <p className="font-display text-xs font-semibold uppercase tracking-[0.3em] text-ink-dim">
           OR{" "}

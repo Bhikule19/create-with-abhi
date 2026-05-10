@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import { useEffect, useRef } from "react";
 import { useMenu } from "./MenuProvider";
-import { socials } from "@/lib/socials";
+import { RESUME_FILENAME, RESUME_HREF, socials } from "@/lib/socials";
 
 const anchors = [
   { label: "EXPERIENCE", href: "#experience" },
@@ -147,6 +147,14 @@ export function MenuOverlay() {
                 {s.label}
               </a>
             ))}
+            <a
+              href={RESUME_HREF}
+              download={RESUME_FILENAME}
+              onClick={close}
+              className="hover:text-accent transition-colors"
+            >
+              Resume ↓
+            </a>
             <span className="ml-auto">ESC TO CLOSE</span>
           </motion.div>
         </motion.div>

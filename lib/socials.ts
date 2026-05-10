@@ -2,6 +2,8 @@ export type Social = { label: string; href: string };
 
 export const EMAIL = "createwithabhi19@gmail.com";
 export const MAIL_HREF = `mailto:${EMAIL}?subject=Hi%20Abhi`;
+export const RESUME_HREF = "/Abhishek_B.pdf";
+export const RESUME_FILENAME = "Abhishek_B.pdf";
 
 export const socials: Social[] = [
   { label: "GitHub", href: "https://github.com/Bhikule19" },
