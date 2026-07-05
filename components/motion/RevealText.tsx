@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef, type ElementType, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode, type RefCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
 import { GSAP_EASE, DUR } from "@/lib/tokens";
 
+type RevealTextTag = "h1" | "h2" | "h3" | "p" | "div" | "span";
+
 interface RevealTextProps {
-  as?: ElementType;
+  as?: RevealTextTag;
   delay?: number;
   className?: string;
   children: ReactNode;
@@ -21,6 +23,9 @@ export function RevealText({
   children,
 }: RevealTextProps) {
   const ref = useRef<HTMLElement>(null);
+  const setRef: RefCallback<HTMLElement> = (node) => {
+    ref.current = node;
+  };
   const delayRef = useRef(delay);
   delayRef.current = delay;
 
@@ -72,7 +77,7 @@ export function RevealText({
   }, []);
 
   return (
-    <Tag ref={ref} className={className} style={{ opacity: 1 }}>
+    <Tag ref={setRef} className={className} style={{ opacity: 1 }}>
       {children}
     </Tag>
   );
