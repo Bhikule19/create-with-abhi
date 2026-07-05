@@ -27,7 +27,10 @@ export function RevealText({
     ref.current = node;
   };
   const delayRef = useRef(delay);
-  delayRef.current = delay;
+
+  useEffect(() => {
+    delayRef.current = delay;
+  }, [delay]);
 
   useEffect(() => {
     const el = ref.current;
