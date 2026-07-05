@@ -1,56 +1,63 @@
 @import "tailwindcss";
 
-/* next-themes uses data-theme on <html> */
+/* Dark is the brand (v1). next-themes keeps data-theme="dark" forced. */
 @variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* KINETIC — dark-mode-first. Volt #C6FF00 on carbon #000. */
+/* CINEMA — warm black stage, ivory ink, brass + violet accents.
+   Values mirror lib/tokens.ts — keep both in sync. */
 :root {
-  --bg: #000000;
-  --ink: #f6f6f6;
-  --ink-dim: #c3caac;
-  --surface: #131313;
-  --surface-high: #1f1f1f;
-  --paper: #1a1a1a;
-  --rule: rgba(255, 255, 255, 0.08);
-  --border-glass: rgba(255, 255, 255, 0.1);
-  --accent: #c6ff00;
-  --accent-glow: rgba(198, 255, 0, 0.45);
-}
+  --stage: #0a0a0b;
+  --surface: #141416;
+  --surface-high: #1c1c1f;
+  --line: #2a2a2e;
+  --ink: #e8e6e1;
+  --ink-muted: #8a877f;
+  --brass: #d4a24e;
+  --brass-hover: #e6b96a;
+  --violet: #8b6fe8;
 
-[data-theme="light"] {
-  --bg: #fafafa;
-  --ink: #0a0a0a;
-  --ink-dim: rgba(10, 10, 10, 0.6);
-  --surface: #f1f1f1;
-  --surface-high: #e4e4e4;
-  --paper: #ededed;
-  --rule: rgba(10, 10, 10, 0.12);
-  --border-glass: rgba(10, 10, 10, 0.1);
-  --accent: #536d00;
-  --accent-glow: rgba(83, 109, 0, 0.3);
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 0.3s;
+  --dur-base: 0.9s;
+  --dur-slow: 1.4s;
+
+  /* Fluid type scale */
+  --text-display-xl: clamp(3.5rem, 10vw, 9rem);
+  --text-display-lg: clamp(2.5rem, 6vw, 5rem);
+  --text-display-md: clamp(1.75rem, 3.5vw, 2.75rem);
 }
 
 @theme {
-  --color-bg: var(--bg);
-  --color-ink: var(--ink);
-  --color-ink-dim: var(--ink-dim);
+  /* New tokens */
+  --color-stage: var(--stage);
   --color-surface: var(--surface);
   --color-surface-high: var(--surface-high);
-  --color-paper: var(--paper);
-  --color-rule: var(--rule);
-  --color-accent: var(--accent);
-  --color-glass: var(--border-glass);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-brass: var(--brass);
+  --color-brass-hover: var(--brass-hover);
+  --color-violet: var(--violet);
 
-  --font-display:
-    var(--ff-display), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-sans:
-    var(--ff-body), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: var(--ff-display), ui-monospace, Menlo, Consolas, monospace;
+  /* Compat aliases — old sections keep rendering until phases 3–5 replace them */
+  --color-bg: var(--stage);
+  --color-ink-dim: var(--ink-muted);
+  --color-paper: var(--surface);
+  --color-rule: var(--line);
+  --color-accent: var(--brass);
+  --color-glass: var(--line);
+
+  --font-sans: var(--ff-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--ff-serif), ui-serif, Georgia, serif;
+  --font-mono: var(--ff-mono), ui-monospace, Menlo, Consolas, monospace;
+  --font-display: var(--ff-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
   html {
-    background: var(--bg);
+    background: var(--stage);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -58,31 +65,22 @@
   }
 
   body {
-    background: var(--bg);
+    background: var(--stage);
     color: var(--ink);
-    font-family:
-      var(--ff-body),
-      ui-sans-serif,
-      system-ui,
-      -apple-system,
-      sans-serif;
-    transition:
-      background-color 200ms ease,
-      color 200ms ease;
+    font-family: var(--ff-sans), ui-sans-serif, system-ui, sans-serif;
     overflow-x: hidden;
   }
 
   ::selection {
-    background: var(--accent);
-    color: #000000;
+    background: var(--brass);
+    color: var(--stage);
   }
 
-  /* Visible focus for keyboard users — paired with the global cursor: none */
   :focus {
     outline: none;
   }
   :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--brass);
     outline-offset: 3px;
     border-radius: 0;
   }
@@ -102,7 +100,6 @@
     overflow: hidden;
   }
 
-  /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -112,5 +109,27 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+@layer utilities {
+  /* Brass→gold→violet gradient clipped to text (accent words, footer email) */
+  .text-gradient-accent {
+    background: linear-gradient(
+      97deg,
+      var(--brass) 0%,
+      var(--brass-hover) 45%,
+      var(--violet) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .label-mono {
+    font-family: var(--ff-mono), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
   }
 }
