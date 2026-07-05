@@ -5,16 +5,21 @@ import { Canvas } from "@react-three/fiber";
 import { Starfield } from "@/components/experience/Starfield";
 import { STAR_COUNT_DESKTOP, STAR_COUNT_MOBILE } from "@/lib/tokens";
 
-const noopSubscribe = () => () => {};
+let webglSupport: boolean | null = null;
 
-function getWebGLSnapshot(): boolean {
+/** Probes WebGL support at most once per page lifetime and caches the result.
+ *  Explicitly releases the probe context so it doesn't leak a GPU resource. */
+function probeWebGL(): boolean {
+  if (webglSupport !== null) return webglSupport;
   try {
     const canvas = document.createElement("canvas");
     const gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
-    return Boolean(gl);
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    webglSupport = Boolean(gl);
   } catch {
-    return false;
+    webglSupport = false;
   }
+  return webglSupport;
 }
 
 const subscribeReducedMotion = (notify: () => void) => {
@@ -36,11 +41,7 @@ const getMobileSnapshot = () =>
 /** Full-bleed starfield layer behind hero content. Renders nothing without WebGL
  *  or under reduced motion — the CSS gradient fallback behind it carries the look. */
 export function HeroScene() {
-  const webgl = useSyncExternalStore(
-    noopSubscribe,
-    getWebGLSnapshot,
-    () => false,
-  );
+  const webgl = typeof window === "undefined" ? false : probeWebGL();
   const reduced = useSyncExternalStore(
     subscribeReducedMotion,
     getReducedMotionSnapshot,
