@@ -21,6 +21,8 @@ export function RevealText({
   children,
 }: RevealTextProps) {
   const ref = useRef<HTMLElement>(null);
+  const delayRef = useRef(delay);
+  delayRef.current = delay;
 
   useEffect(() => {
     const el = ref.current;
@@ -36,12 +38,14 @@ export function RevealText({
     const split = new SplitType(el, { types: "lines", lineClass: "reveal-line" });
 
     const lines = el.querySelectorAll<HTMLElement>(".reveal-line");
+    const wraps: HTMLDivElement[] = [];
     lines.forEach((line) => {
       const wrap = document.createElement("div");
       wrap.style.overflow = "hidden";
       wrap.style.display = "block";
       line.parentNode?.insertBefore(wrap, line);
       wrap.appendChild(line);
+      wraps.push(wrap);
     });
 
     const tween = gsap.fromTo(
@@ -52,7 +56,7 @@ export function RevealText({
         duration: DUR.base,
         ease: GSAP_EASE.outExpo,
         stagger: 0.1,
-        delay,
+        delay: delayRef.current,
         scrollTrigger: { trigger: el, start: "top 85%", once: true },
       },
     );
@@ -60,9 +64,12 @@ export function RevealText({
     return () => {
       tween.scrollTrigger?.kill();
       tween.kill();
+      wraps.forEach((wrap) => {
+        wrap.replaceWith(...wrap.childNodes);
+      });
       split.revert();
     };
-  }, [delay]);
+  }, []);
 
   return (
     <Tag ref={ref} className={className} style={{ opacity: 1 }}>
