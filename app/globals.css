@@ -16,6 +16,12 @@
   --brass-hover: #e6b96a;
   --violet: #8b6fe8;
 
+  /* Raw CSS var aliases — old sections reference these directly (not via
+     Tailwind's --color-* @theme tokens): ProjectRow.tsx, Contact.tsx,
+     ScrollProgress.tsx. Keep alongside --color-accent below. */
+  --accent: var(--brass);
+  --accent-glow: rgba(212, 162, 78, 0.35);
+
   /* Motion */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -98,6 +104,17 @@
   }
   .lenis.lenis-stopped {
     overflow: hidden;
+  }
+
+  /* Hide the native cursor while the custom Cursor component is enabled
+     (fine pointer + no reduced motion). Cursor.tsx toggles this class on
+     <html> from an effect. [data-native-cursor] is an escape hatch for
+     elements that still need the OS cursor (e.g. text inputs). */
+  html.cursor-none-root {
+    cursor: none;
+  }
+  html.cursor-none-root [data-native-cursor] {
+    cursor: auto;
   }
 
   @media (prefers-reduced-motion: reduce) {

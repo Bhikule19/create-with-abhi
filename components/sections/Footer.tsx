@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { formatMumbaiTime } from "@/lib/motion-utils";
-import { socials } from "@/lib/socials";
+import { RESUME_FILENAME, RESUME_HREF, socials } from "@/lib/socials";
 
 const EMAIL = "hello@createwithabhi.in";
 const CLOCK_TICK_MS = 30_000;
@@ -49,14 +49,18 @@ export function Footer() {
             <a
               key={s.href}
               href={s.href}
-              target="_blank"
+              target={s.href.startsWith("http") ? "_blank" : undefined}
               rel="noopener noreferrer"
               className="transition-colors hover:text-brass"
             >
               {s.label}
             </a>
           ))}
-          <a href="/Abhishek_B.pdf" className="transition-colors hover:text-brass">
+          <a
+            href={RESUME_HREF}
+            download={RESUME_FILENAME}
+            className="transition-colors hover:text-brass"
+          >
             CV
           </a>
         </span>

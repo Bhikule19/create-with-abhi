@@ -54,23 +54,37 @@ export function Preloader() {
       ease: "power2.inOut",
       onUpdate: () => setCount(Math.round(counter.value)),
     });
-    tl.to(overlay.current, {
-      yPercent: -100,
-      duration: 0.7,
-      ease: GSAP_EASE.outExpo,
-    });
+    tl.to(
+      overlay.current,
+      {
+        yPercent: -100,
+        duration: 0.7,
+        ease: GSAP_EASE.outExpo,
+      },
+      "-=0.4",
+    );
 
     return () => {
       tl.kill();
     };
   }, [shouldShow]);
 
+  // Lock scroll behind the preloader while it's showing.
+  useEffect(() => {
+    if (!show) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [show]);
+
   if (!show) return null;
 
   return (
     <div
       ref={overlay}
-      className="fixed inset-0 z-[90] flex items-end justify-between bg-stage p-8"
+      className="fixed inset-0 z-[300] flex items-end justify-between bg-stage p-8"
       aria-hidden
     >
       <span className="font-sans text-2xl font-bold tracking-tight text-ink">

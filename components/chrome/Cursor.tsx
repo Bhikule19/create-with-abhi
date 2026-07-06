@@ -4,11 +4,19 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { gsap } from "gsap";
 import { resolveCursorState, type CursorState } from "@/lib/cursor-state";
 
+// Subscribe to BOTH the hover/pointer and reduced-motion media queries —
+// the snapshot reads both, so toggling either one mid-session (e.g. a user
+// flips on reduced-motion) must notify useSyncExternalStore to re-check.
 const subscribeHover = (notify: () => void) => {
   if (typeof window === "undefined") return () => {};
-  const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-  mq.addEventListener("change", notify);
-  return () => mq.removeEventListener("change", notify);
+  const hoverMq = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const motionMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  hoverMq.addEventListener("change", notify);
+  motionMq.addEventListener("change", notify);
+  return () => {
+    hoverMq.removeEventListener("change", notify);
+    motionMq.removeEventListener("change", notify);
+  };
 };
 const getHoverSnapshot = () =>
   window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
@@ -43,6 +51,16 @@ export function Cursor() {
     return () => window.removeEventListener("pointermove", onMove);
   }, [enabled]);
 
+  // Hide the native cursor while this component is enabled; restore it on
+  // disable/unmount (see html.cursor-none-root in globals.css).
+  useEffect(() => {
+    if (!enabled) return;
+    document.documentElement.classList.add("cursor-none-root");
+    return () => {
+      document.documentElement.classList.remove("cursor-none-root");
+    };
+  }, [enabled]);
+
   if (!enabled) return null;
 
   const size = state === "view" ? 72 : state === "link" ? 14 : 20;
@@ -51,7 +69,7 @@ export function Cursor() {
     <div
       ref={ref}
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[100]"
+      className="pointer-events-none fixed left-0 top-0 z-[400]"
       style={{ transform: "translate(-100px, -100px)" }}
     >
       <div

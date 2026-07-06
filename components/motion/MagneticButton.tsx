@@ -53,6 +53,7 @@ export function MagneticButton({
     <Tag
       ref={ref}
       href={href}
+      type={as === "button" ? "button" : undefined}
       onClick={onClick}
       data-cursor="link"
       className={className}

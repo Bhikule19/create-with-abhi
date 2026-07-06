@@ -81,7 +81,7 @@ export function Starfield({ count }: { count: number }) {
 
   return (
     <points>
-      <bufferGeometry>
+      <bufferGeometry key={count}>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-aSize" args={[sizes, 1]} />
         <bufferAttribute attach="attributes-aViolet" args={[violetMask, 1]} />

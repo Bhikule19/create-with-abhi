@@ -9,12 +9,16 @@ const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
 
 export function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme, forcedTheme } = useTheme();
   const mounted = useSyncExternalStore(
     subscribe,
     getClientSnapshot,
     getServerSnapshot,
   );
+
+  // Theme is forced (see app/layout.tsx `forcedTheme="dark"`) — toggling
+  // would be a no-op, so don't render a dead control.
+  if (forcedTheme) return null;
 
   const isDark = mounted && resolvedTheme === "dark";
   const primary = isDark ? "LIGHT MODE" : "DARK MODE";
