@@ -39,7 +39,7 @@ test.describe("landing — hero & footer bookends", () => {
     ).toBeVisible();
     await expect(page.getByText(/MUMBAI, \d{2}:\d{2} IST/)).toBeVisible();
     await expect(
-      page.locator("text=CREATEWITHABHI").first(),
+      page.locator("footer").getByText("CREATEWITHABHI", { exact: true }),
     ).toBeVisible();
   });
 
