@@ -1,143 +1,107 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { RotatingMark } from "@/components/chrome/RotatingMark";
-import { ImageTrail } from "@/components/motion/ImageTrail";
-import { trailImages } from "@/lib/trail";
+import { RevealText } from "@/components/motion/RevealText";
+import { MagneticButton } from "@/components/motion/MagneticButton";
 
-const fadeUp = {
-  hidden: { y: 30, opacity: 0 },
-  show: { y: 0, opacity: 1 },
-};
-
-let registered = false;
+const HeroScene = dynamic(
+  () => import("@/components/experience/HeroScene").then((m) => m.HeroScene),
+  { ssr: false },
+);
 
 export function Hero() {
-  const reduced = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-  const parallaxRef = useRef<HTMLDivElement>(null);
+  const content = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    const el = content.current;
+    if (!el) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
-    if (!registered) {
-      gsap.registerPlugin(ScrollTrigger);
-      registered = true;
-    }
-    const wrap = parallaxRef.current;
-    const section = sectionRef.current;
-    if (!wrap || !section) return;
 
-    const ctx = gsap.context(() => {
-      gsap.to(wrap, {
-        y: -60,
-        opacity: 0.2,
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
-    }, section);
-
-    return () => ctx.revert();
-  }, [reduced]);
+    gsap.registerPlugin(ScrollTrigger);
+    const tween = gsap.to(el, {
+      yPercent: -18,
+      opacity: 0,
+      filter: "blur(6px)",
+      ease: "none",
+      scrollTrigger: {
+        trigger: el,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, []);
 
   return (
     <section
-      ref={sectionRef}
-      id="hero"
-      className="relative min-h-[100vh] overflow-hidden pt-32 pb-24 lg:pt-40 lg:pb-32"
+      id="top"
+      className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden bg-stage"
     >
-      {/* Radial Volt glow behind the name — low-opacity primary per spec */}
+      {/* Static gradient fallback — carries the look when WebGL is off */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-[10%] top-[40%] h-[60vh] w-[80vw] -translate-y-1/2 rounded-full opacity-[0.18] blur-[120px]"
+        className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(closest-side, var(--accent), transparent 70%)",
+            "radial-gradient(ellipse 60% 45% at 50% 12%, rgba(139,111,232,0.14), transparent 65%), radial-gradient(ellipse 45% 35% at 72% 80%, rgba(212,162,78,0.08), transparent 60%)",
         }}
       />
+      <HeroScene />
 
-      {/* Subtle grid overlay for engineered feel */}
       <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage:
-            "linear-gradient(var(--ink) 1px, transparent 1px), linear-gradient(90deg, var(--ink) 1px, transparent 1px)",
-          backgroundSize: "80px 80px",
-        }}
-      />
+        ref={content}
+        className="relative z-10 flex flex-col items-center px-6 text-center"
+      >
+        <RevealText as="p" className="label-mono mb-8 text-ink-muted">
+          Abhishek Bhikule — Web Designer &amp; Developer
+        </RevealText>
 
-      <ImageTrail images={trailImages} containerRef={sectionRef} />
-
-      <div className="relative z-10 mx-auto flex max-w-[1440px] flex-col gap-10 px-4 lg:px-20">
-        <motion.div
-          initial="hidden"
-          animate="show"
-          variants={fadeUp}
-          transition={{ duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
-          className="flex items-center gap-3 font-display text-xs font-semibold uppercase tracking-[0.3em] text-ink-dim"
+        <h1
+          className="font-sans font-bold uppercase leading-[0.98] tracking-[-0.03em]"
+          style={{ fontSize: "var(--text-display-xl)" }}
         >
-          <span className="h-px w-8 bg-accent" />
-          <span>PORTFOLIO · 2024 — 2026</span>
-        </motion.div>
+          <RevealText as="span" className="block">
+            Design that
+          </RevealText>
+          <RevealText as="span" delay={0.12} className="block">
+            people{" "}
+            <em className="text-gradient-accent font-serif font-light normal-case italic tracking-normal">
+              remember,
+            </em>
+          </RevealText>
+          <RevealText as="span" delay={0.24} className="block">
+            code that{" "}
+            <em className="text-gradient-accent font-serif font-light normal-case italic tracking-normal">
+              performs.
+            </em>
+          </RevealText>
+        </h1>
 
-        <div ref={parallaxRef}>
-          <motion.h1
-            initial="hidden"
-            animate="show"
-            variants={fadeUp}
-            transition={{ duration: 0.9, delay: 0.1, ease: [0.65, 0, 0.35, 1] }}
-            className="font-display font-bold leading-[0.92] tracking-[-0.04em]"
-            style={{ fontSize: "clamp(3.5rem, 11vw, 9.5rem)" }}
-          >
-            <span className="inline-flex items-baseline gap-3">
-              <RotatingMark className="text-accent text-[0.45em]" />
-              <span>Abhishek</span>
-            </span>
-            <br />
-            <span>
-              Bhikule<span className="text-accent">.</span>
-            </span>
-          </motion.h1>
-        </div>
-
-        <motion.div
-          initial="hidden"
-          animate="show"
-          variants={fadeUp}
-          transition={{ duration: 0.7, delay: 0.25, ease: [0.65, 0, 0.35, 1] }}
-          className="flex max-w-[640px] flex-col gap-4"
+        <MagneticButton
+          href="#contact"
+          className="mt-12 inline-flex items-center gap-2 rounded-full border border-brass px-8 py-4 label-mono text-brass transition-colors hover:bg-brass hover:text-stage"
         >
-          <p className="font-display text-xs font-semibold uppercase tracking-[0.3em] text-ink-dim">
-            FULL-STACK DEVELOPER · MUMBAI
-          </p>
-          <p className="font-sans text-lg leading-[1.6] text-ink lg:text-xl">
-            I build for the web — products, plugins, and the occasional weekend
-            experiment that turns into something I ship.
-          </p>
-        </motion.div>
+          Start a project →
+        </MagneticButton>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.6 }}
-          className="mt-12 flex items-center gap-3 font-display text-xs font-semibold uppercase tracking-[0.3em] text-ink-dim"
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
-          </span>
-          <span>SCROLL TO EXPLORE</span>
-        </motion.div>
+        <p className="label-mono mt-10 flex items-center gap-2 text-ink-muted">
+          <span
+            className="inline-block h-1.5 w-1.5 animate-pulse rounded-full"
+            style={{ background: "var(--brass)" }}
+          />
+          Available — booking Q3 2026
+        </p>
       </div>
+
+      <p className="label-mono absolute bottom-8 z-10 text-ink-muted">↓ Scroll</p>
     </section>
   );
 }
