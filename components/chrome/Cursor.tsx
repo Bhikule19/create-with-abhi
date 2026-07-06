@@ -1,122 +1,97 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-} from "motion/react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { gsap } from "gsap";
+import { resolveCursorState, type CursorState } from "@/lib/cursor-state";
 
-type CursorState = "default" | "view" | "link";
-
+// Subscribe to BOTH the hover/pointer and reduced-motion media queries —
+// the snapshot reads both, so toggling either one mid-session (e.g. a user
+// flips on reduced-motion) must notify useSyncExternalStore to re-check.
 const subscribeHover = (notify: () => void) => {
   if (typeof window === "undefined") return () => {};
-  const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-  mq.addEventListener("change", notify);
-  return () => mq.removeEventListener("change", notify);
+  const hoverMq = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const motionMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  hoverMq.addEventListener("change", notify);
+  motionMq.addEventListener("change", notify);
+  return () => {
+    hoverMq.removeEventListener("change", notify);
+    motionMq.removeEventListener("change", notify);
+  };
 };
 const getHoverSnapshot = () =>
-  window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+  !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const getHoverServerSnapshot = () => false;
 
+/** Ring cursor: 20px difference-blend ring → 72px brass lens with VIEW label. */
 export function Cursor() {
-  const reduced = useReducedMotion();
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-  const sx = useSpring(x, { stiffness: 240, damping: 24, mass: 0.35 });
-  const sy = useSpring(y, { stiffness: 240, damping: 24, mass: 0.35 });
+  const ref = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<CursorState>("default");
-
-  const canHover = useSyncExternalStore(
+  const enabled = useSyncExternalStore(
     subscribeHover,
     getHoverSnapshot,
     getHoverServerSnapshot,
   );
-  const enabled = canHover && !reduced;
 
   useEffect(() => {
     if (!enabled) return;
+    const el = ref.current;
+    if (!el) return;
 
-    const onMove = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-      const cursorAttr = target.closest<HTMLElement>("[data-cursor]");
-      const next =
-        (cursorAttr?.dataset.cursor as CursorState | undefined) ?? "default";
-      setState(next);
+    const xTo = gsap.quickTo(el, "x", { duration: 0.35, ease: "power3.out" });
+    const yTo = gsap.quickTo(el, "y", { duration: 0.35, ease: "power3.out" });
+
+    const onMove = (e: PointerEvent) => {
+      xTo(e.clientX);
+      yTo(e.clientY);
+      setState(resolveCursorState(e.target));
     };
-    window.addEventListener("mousemove", onMove);
-    document.documentElement.classList.add("cursor-none-root");
 
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [enabled]);
+
+  // Hide the native cursor while this component is enabled; restore it on
+  // disable/unmount (see html.cursor-none-root in globals.css).
+  useEffect(() => {
+    if (!enabled) return;
+    document.documentElement.classList.add("cursor-none-root");
     return () => {
-      window.removeEventListener("mousemove", onMove);
       document.documentElement.classList.remove("cursor-none-root");
     };
-  }, [enabled, x, y]);
+  }, [enabled]);
 
   if (!enabled) return null;
 
-  const isView = state === "view";
-  const isLink = state === "link";
+  const size = state === "view" ? 72 : state === "link" ? 14 : 20;
 
   return (
-    <>
-      <style jsx global>{`
-        .cursor-none-root,
-        .cursor-none-root body,
-        .cursor-none-root a,
-        .cursor-none-root button {
-          cursor: none !important;
-        }
-        [data-native-cursor],
-        [data-native-cursor] * {
-          cursor: auto !important;
-        }
-      `}</style>
-      <motion.div
-        aria-hidden
-        style={{ x: sx, y: sy }}
-        className="pointer-events-none fixed left-0 top-0 z-[9999]"
+    <div
+      ref={ref}
+      aria-hidden
+      className="pointer-events-none fixed left-0 top-0 z-[400]"
+      style={{ transform: "translate(-100px, -100px)" }}
+    >
+      <div
+        className="flex items-center justify-center rounded-full"
+        style={{
+          width: size,
+          height: size,
+          marginLeft: -size / 2,
+          marginTop: -size / 2,
+          border: state === "view" ? "none" : "1.5px solid var(--ink)",
+          background: state === "view" ? "var(--brass)" : "transparent",
+          mixBlendMode: state === "view" ? "normal" : "difference",
+          transition:
+            "width var(--dur-fast) var(--ease-out-expo), height var(--dur-fast) var(--ease-out-expo), background var(--dur-fast)",
+        }}
       >
-        <motion.div
-          className="-translate-x-1/2 -translate-y-1/2 flex items-center justify-center font-display font-bold uppercase"
-          animate={{
-            width: isView ? 88 : isLink ? 36 : 14,
-            height: isView ? 88 : isLink ? 36 : 14,
-            backgroundColor: isView
-              ? "var(--accent)"
-              : isLink
-                ? "rgba(198, 255, 0, 0.18)"
-                : "var(--ink)",
-            borderColor: isLink ? "var(--accent)" : "rgba(198,255,0,0)",
-            borderWidth: isLink ? 1.5 : 0,
-            color: "var(--bg)",
-            boxShadow: isView
-              ? "0 0 40px var(--accent-glow)"
-              : "0 0 0px transparent",
-          }}
-          transition={{ type: "spring", stiffness: 260, damping: 20, mass: 0.4 }}
-          style={{ borderStyle: "solid" }}
-        >
-          <AnimatePresence>
-            {isView && (
-              <motion.span
-                initial={{ opacity: 0, scale: 0.7 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.7 }}
-                transition={{ duration: 0.18 }}
-                className="text-[10px] tracking-[0.18em]"
-              >
-                VIEW
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      </motion.div>
-    </>
+        {state === "view" && (
+          <span className="label-mono" style={{ color: "var(--stage)", fontSize: 9 }}>
+            VIEW
+          </span>
+        )}
+      </div>
+    </div>
   );
 }

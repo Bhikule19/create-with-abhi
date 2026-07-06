@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk, Manrope } from "next/font/google";
+import { Instrument_Sans, Fraunces, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { TopBar } from "@/components/chrome/TopBar";
@@ -12,22 +12,31 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
+const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
-  variable: "--ff-display",
+  variable: "--ff-sans",
   display: "swap",
 });
 
-const manrope = Manrope({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--ff-body",
+  style: ["normal", "italic"],
+  variable: "--ff-serif",
+  display: "swap",
+  axes: ["opsz"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--ff-mono",
   display: "swap",
 });
 
 const SITE_URL = "https://createwithabhi.in";
 const TITLE = "Abhishek Bhikule — Create with Abhi";
 const DESCRIPTION =
-  "Full-stack developer based in Mumbai. I build for the web — products, plugins, and the occasional weekend experiment.";
+  "Independent web designer & developer in Mumbai. Cinematic websites, landing pages, WordPress and motion — designed and built end to end.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -41,7 +50,8 @@ export const metadata: Metadata = {
   creator: "Abhishek Bhikule",
   keywords: [
     "Abhishek Bhikule",
-    "full-stack developer",
+    "web designer",
+    "freelance web developer",
     "Next.js",
     "Laravel",
     "WordPress",
@@ -68,11 +78,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
-  ],
-  colorScheme: "dark light",
+  themeColor: "#0A0A0B",
+  colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
 };
@@ -84,14 +91,15 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${spaceGrotesk.variable} ${manrope.variable}`}
+      className={`${instrumentSans.variable} ${fraunces.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="bg-bg text-ink">
+      <body className="bg-stage text-ink">
         <ThemeProvider
           attribute="data-theme"
           defaultTheme="dark"
+          forcedTheme="dark"
           enableSystem={false}
-          disableTransitionOnChange={false}
+          disableTransitionOnChange
         >
           <MenuProvider>
             <SmoothScroll>

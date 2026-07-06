@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -25,8 +25,11 @@ export function FadeUp({
   y = 40,
   as = "div",
 }: Props) {
-  const Tag = as as React.ElementType;
+  const Tag = as;
   const ref = useRef<HTMLElement | null>(null);
+  const setRef: RefCallback<HTMLElement> = (node) => {
+    ref.current = node;
+  };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -59,7 +62,7 @@ export function FadeUp({
   }, [delay, y]);
 
   return (
-    <Tag ref={ref as never} className={className}>
+    <Tag ref={setRef} className={className}>
       {children}
     </Tag>
   );
